@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvasser Data Entry System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #e0e7ff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Card */
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header i {
+            font-size: 24px;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            color: #92400e;
+        }
+
+        .alert i {
+            margin-top: 2px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        .form-label .badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 14px;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-family: inherit;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .form-control:disabled {
+            background: var(--gray-100);
+            color: var(--gray-500);
+        }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        /* Date Group */
+        .date-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .date-group .form-label {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 16px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transform: translateY(-120%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .toast-error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .card-body {
+                padding: 20px;
+            }
+
+            .date-group {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-users"></i> Canvasser System</h1>
+            <p>Sistem Input Data Canvasser</p>
+        </div>
+
+        <!-- Main Card -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-edit"></i>
+                <h2>Input Data Baru</h2>
+            </div>
+
+            <div class="card-body">
+                <!-- Alert -->
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        Data dengan kombinasi <strong>(Store + Canvasser + Periode)</strong> yang sama akan ditimpa/diupdate.
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form id="canvasserForm">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Store (Kode Toko)
+                            <span class="badge">Sorted</span>
+                        </label>
+                        <select class="form-control" id="store" required>
+                            <option value="">-- Pilih Store --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Name (Nama Toko)</label>
+                        <input type="text" class="form-control" id="storeName" readonly placeholder="Otomatis terisi">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nama Canvasser
+                            <span class="badge">Unique</span>
+                        </label>
+                        <select class="form-control" id="canvasser" required>
+                            <option value="">-- Pilih Store dulu --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Periode</label>
+                        <div class="date-group">
+                            <div>
+                                <label class="form-label">Tanggal Mulai</label>
+                                <input type="date" class="form-control" id="startDate" required>
+                            </div>
+                            <div>
+                                <label class="form-label">Tanggal Akhir</label>
+                                <input type="date" class="form-control" id="endDate" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Hari Kerja</label>
+                        <input type="number" class="form-control" id="hariKerja" min="1" max="31" placeholder="Masukkan jumlah hari kerja" required>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-save"></i> Simpan Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <script>
+        // ============================================
+        // ⚠️ GANTI URL DI BAWAH INI DENGAN URL ANDA
+        // ============================================
+        const API_URL = 'PASTE_URL_GOOGLE_APPS_SCRIPT_ANDA_DI_SINI';
+        // Contoh: const API_URL = 'https://script.google.com/macros/s/AKfycbx.../exec';
+        // ============================================
+
+        // DATA MASTER
+        const STORE_DATA = {
+            "6001": "Pasar Rebo",
+            "6003": "Kelapa Gading",
+            "6004": "Meruya",
+            "6006": "Ciputat",
+            "6011": "Semarang",
+            "6013": "Makassar",
+            "6016": "Yogyakarta",
+            "6017": "Banjarmasin",
+            "6019": "Solo",
+            "6023": "Cikarang",
+            "6027": "Tasikmalaya",
+            "6029": "Batam",
+            "6030": "Pakansari",
+            "6031": "Lampung",
+            "6036": "Padalarang",
+            "6038": "Tegal"
+        };
+
+        const CANVASSER_DATA = {
+            "6001": ["Diazan Winayuda", "Reno Rahmadon", "Sukarna Fabian", "Yoga Pratama"],
+            "6003": ["Boby", "Dicky", "Harjuno", "Risky"],
+            "6004": ["Danan", "Ilham", "Nurdin", "Robani"],
+            "6006": ["Bimo Dwi Cahyo", "Faiyal Syaiful", "Mashuri", "Radittya Aribowo", "Rahjudin"],
+            "6011": ["Adrian Arya", "Afifudin", "Ahmad Badrudin", "Bekti Kesuma", "Dian Ekhananto", "Dimas Indra R"],
+            "6013": ["Bayu Aditya Putra", "Syukri", "Taufik Hidayat"],
+            "6016": ["Alfonsus Yudha P", "Edwin Febrianto", "Heppy Winartika Wati", "Hilman Basyirudin", "Lucas Mei Perdana", "M. Irfan Rasyid"],
+            "6017": ["Alfian", "Alfiannor", "Hendra Izza Razaki", "M. Yusuf", "Ozak", "Yusuf"],
+            "6019": ["Agung Kurniawan", "Bagus Wahyu", "Fajar Widiati", "Ilham Purnomo", "Rina", "Soleh"],
+            "6023": ["Abdilah Muamar Kadafi", "Asep Kuswendi", "Ryan Suryadi"],
+            "6027": ["Alif Maulana", "Dede Tendra L", "Dwi Irwansyah"],
+            "6029": ["Deni", "Richardo", "Zulfarian"],
+            "6030": ["Fabian", "Rendi"],
+            "6031": ["Ali Yusuf", "Heri Zakaria", "M. Wahyu", "Randi Anjasmara", "Slamet Widodo"],
+            "6036": ["Bimo Dwi Cahyo", "Faiyal Syaiful", "Fajar Ramadhan", "Heru Wicaksonno", "MF Fauzan", "Mashuri", "Radittya Aribowo", "Rahjudin"],
+            "6038": ["Amirsyah Zulfikar Fahri", "Puguh S. Permadi", "Wisnu Wicaksono"]
+        };
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            populateStoreDropdown();
+            document.getElementById('store').addEventListener('change', onStoreChange);
+            document.getElementById('canvasserForm').addEventListener('submit', submitData);
+        });
+
+        // ============================================
+        // DROPDOWN FUNCTIONS
+        // ============================================
+        function populateStoreDropdown() {
+            const storeSelect = document.getElementById('store');
+            const sortedStores = Object.keys(STORE_DATA).sort((a, b) => parseInt(a) - parseInt(b));
+            
+            storeSelect.innerHTML = '<option value="">-- Pilih Store --</option>';
+            
+            sortedStores.forEach(code => {
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = `${code} - ${STORE_DATA[code]}`;
+                storeSelect.appendChild(option);
+            });
+        }
+
+        function onStoreChange() {
+            const store = document.getElementById('store').value;
+            const storeNameInput = document.getElementById('storeName');
+            const canvasserSelect = document.getElementById('canvasser');
+            
+            storeNameInput.value = store ? STORE_DATA[store] : '';
+            
+            canvasserSelect.innerHTML = '<option value="">-- Pilih Canvasser --</option>';
+            
+            if (store && CANVASSER_DATA[store]) {
+                const sortedCanvassers = [...CANVASSER_DATA[store]].sort();
+                sortedCanvassers.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    canvasserSelect.appendChild(option);
+                });
+            }
+        }
+
+        // ============================================
+        // FORM FUNCTIONS
+        // ============================================
+        function formatPeriode(startDate, endDate) {
+            const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            
+            const startDay = String(start.getDate()).padStart(2, '0');
+            const endDay = String(end.getDate()).padStart(2, '0');
+            const month = months[end.getMonth()];
+            const year = end.getFullYear();
+            
+            return `${startDay}-${endDay} ${month} ${year}`;
+        }
+
+        async function submitData(e) {
+            e.preventDefault();
+            
+            // Check API URL
+            if (!API_URL || API_URL === 'PASTE_URL_GOOGLE_APPS_SCRIPT_ANDA_DI_SINI') {
+                showToast('Error: URL API belum diatur! Hubungi admin.', 'error');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalContent = submitBtn.innerHTML;
+            
+            const store = document.getElementById('store').value;
+            const storeName = document.getElementById('storeName').value;
+            const canvasser = document.getElementById('canvasser').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const hariKerja = document.getElementById('hariKerja').value;
+            
+            if (!store || !canvasser || !startDate || !endDate || !hariKerja) {
+                showToast('Lengkapi semua field!', 'error');
+                return;
+            }
+            
+            const data = {
+                store: store,
+                storeName: storeName,
+                canvasser: canvasser,
+                periode: formatPeriode(startDate, endDate),
+                hariKerja: parseInt(hariKerja)
+            };
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="spinner"></div> Menyimpan...';
+            
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                showToast('Data berhasil disimpan!', 'success');
+                resetForm();
+                
+            } catch (error) {
+                showToast('Gagal menyimpan: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent;
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('canvasserForm').reset();
+            document.getElementById('storeName').value = '';
+            document.getElementById('canvasser').innerHTML = '<option value="">-- Pilih Store dulu --</option>';
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = `toast toast-${type}`;
+            toast.querySelector('i').className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            toastMessage.textContent = message;
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
