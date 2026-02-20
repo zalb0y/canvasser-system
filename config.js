@@ -5,4 +5,4 @@
 // Setelah deploy Apps Script, copy URL-nya dan paste di sini.
 // Contoh: const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbx.../exec';
 
-const DEFAULT_GAS_URL = '';
+const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbz0CRYWqJozmWzJKK8z1LRBeJzOAy4DgxpBDKcTJOAkB1lgvwbkwDc51PfuyRSUiLiDZA/exec';
