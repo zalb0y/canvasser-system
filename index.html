@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvasser Data Entry System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #e0e7ff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 500px; margin: 0 auto; }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .header p { font-size: 14px; opacity: 0.9; }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header i { font-size: 24px; }
+        .card-header h2 { font-size: 18px; font-weight: 600; }
+        .card-body { padding: 25px; }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            color: #92400e;
+        }
+
+        .alert i { margin-top: 2px; }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        .form-label .badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 6px;
+        }
+
+        .form-label .badge-auto {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 14px;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-family: inherit;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .form-control:disabled, .form-control[readonly] {
+            background: var(--gray-100);
+            color: var(--gray-500);
+        }
+
+        .form-control.auto-filled {
+            background: #f0fdf4;
+            border-color: #86efac;
+            color: #166534;
+            font-weight: 600;
+        }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        .date-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .date-group .form-label {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .auto-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .auto-fields .form-label {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .btn-group { display: flex; gap: 12px; margin-top: 24px; }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover { background: var(--gray-200); }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 12px;
+            flex: none;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 16px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transform: translateY(-120%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show { transform: translateY(0); }
+        .toast-success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .toast-error { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+
+        .card-header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .card-header-flex .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-refresh {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-refresh:hover { background: rgba(255,255,255,0.3); }
+
+        .table-wrap {
+            overflow-x: auto;
+            margin: 0 -25px -25px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 650px;
+        }
+
+        thead { background: var(--gray-100); }
+
+        th {
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-500);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-top: 1px solid var(--gray-100);
+            white-space: nowrap;
+            color: var(--gray-700);
+        }
+
+        tbody tr:hover { background: #f9fafb; }
+
+        td.num {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .total-row {
+            background: var(--primary-light) !important;
+            font-weight: 700;
+        }
+
+        .total-row td {
+            border-top: 2px solid var(--primary) !important;
+            color: var(--primary-dark);
+        }
+
+        .delete-btn {
+            background: none;
+            border: 1px solid var(--gray-200);
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.15s;
+            font-size: 11px;
+        }
+
+        .delete-btn:hover {
+            color: var(--danger);
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-500);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: var(--gray-300);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .empty-state p { font-size: 13px; }
+
+        .settings-link {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .settings-link a {
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .settings-link a:hover { color: white; }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+
+        .modal h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--gray-900);
+        }
+
+        .modal .form-group:last-of-type { margin-bottom: 8px; }
+
+        .modal-hint {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-actions .btn { flex: none; }
+
+        .data-count {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .header h1 { font-size: 22px; }
+            .card-body { padding: 20px; }
+            .date-group { grid-template-columns: 1fr; }
+            .auto-fields { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; }
+            .table-wrap { margin: 0 -20px -20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-users"></i> Canvasser System</h1>
+            <p>Sistem Input Data Canvasser</p>
+        </div>
+
+        <!-- INPUT FORM CARD -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-edit"></i>
+                <h2>Input Data Baru</h2>
+            </div>
+
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        Data dengan kombinasi <strong>(Nama Canvasser + Periode)</strong> yang sama akan ditimpa/diupdate.
+                    </div>
+                </div>
+
+                <form id="canvasserForm">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Store (Kode Toko)
+                            <span class="badge">Sorted</span>
+                        </label>
+                        <select class="form-control" id="store" required>
+                            <option value="">-- Pilih Store --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Name (Nama Toko)</label>
+                        <input type="text" class="form-control" id="storeName" readonly placeholder="Otomatis terisi">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nama Canvasser
+                            <span class="badge">Primary Key</span>
+                        </label>
+                        <select class="form-control" id="canvasser" required>
+                            <option value="">-- Pilih Store dulu --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Periode</label>
+                        <div class="date-group">
+                            <div>
+                                <label class="form-label">Tanggal Mulai</label>
+                                <input type="date" class="form-control" id="startDate" required>
+                            </div>
+                            <div>
+                                <label class="form-label">Tanggal Akhir</label>
+                                <input type="date" class="form-control" id="endDate" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Hari Kerja</label>
+                        <input type="number" class="form-control" id="hariKerja" min="1" max="31" placeholder="Masukkan jumlah hari kerja" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Kalkulasi Otomatis
+                            <span class="badge badge-auto">Auto</span>
+                        </label>
+                        <div class="auto-fields">
+                            <div>
+                                <label class="form-label">Bensin</label>
+                                <input type="text" class="form-control auto-filled" id="bensinField" readonly placeholder="—">
+                            </div>
+                            <div>
+                                <label class="form-label">Kendaraan</label>
+                                <input type="text" class="form-control auto-filled" id="kendaraanField" readonly placeholder="—">
+                            </div>
+                            <div>
+                                <label class="form-label">Meal</label>
+                                <input type="text" class="form-control auto-filled" id="mealField" readonly placeholder="—">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-save"></i> Simpan Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- DATA TABLE CARD -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-header-flex">
+                    <div class="left">
+                        <i class="fas fa-table"></i>
+                        <h2>Data Tersimpan</h2>
+                        <span class="data-count" id="dataCount">0</span>
+                    </div>
+                    <button class="btn-refresh" onclick="loadData()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="tableContainer">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Belum ada data. Silakan submit data atau klik Refresh.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-link">
+            <a href="#" onclick="openSettings(); return false;">
+                <i class="fas fa-cog"></i> Pengaturan URL Apps Script
+            </a>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <!-- Hidden iframe -->
+    <iframe id="hiddenFrame" name="hiddenFrame" style="display:none;"></iframe>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <h2><i class="fas fa-cog"></i> Pengaturan</h2>
+            <div class="form-group">
+                <label class="form-label">Google Apps Script Web App URL</label>
+                <input type="text" class="form-control" id="gasUrlInput" placeholder="https://script.google.com/macros/s/xxxxx/exec">
+            </div>
+            <p class="modal-hint">
+                URL ini disimpan di browser (localStorage). Anda juga bisa set default di file <code>config.js</code> agar tidak perlu input manual.
+            </p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary btn-sm" onclick="closeSettings()">Batal</button>
+                <button class="btn btn-primary btn-sm" onclick="saveSettings()">
+                    <i class="fas fa-save"></i> Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Config -->
+    <script src="config.js"></script>
+    <script>
+        // =============================================
+        // CONFIGURATION
+        // =============================================
+        let GAS_URL = '';
+        if (typeof DEFAULT_GAS_URL !== 'undefined' && DEFAULT_GAS_URL) GAS_URL = DEFAULT_GAS_URL;
+        const savedUrl = localStorage.getItem('gas_url');
+        if (savedUrl) GAS_URL = savedUrl;
+
+        // =============================================
+        // STORE & CANVASSER DATA
+        // =============================================
+        const STORE_DATA = {
+            "6001": { name: "Pasar Rebo",      bensinRate: 0,     kendaraanRate: 25000, mealRate: 15000 },
+            "6003": { name: "Kelapa Gading",    bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6004": { name: "Meruya",           bensinRate: 8000,  kendaraanRate: 25000, mealRate: 15000 },
+            "6006": { name: "Ciputat",          bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6011": { name: "Semarang",         bensinRate: 8000,  kendaraanRate: 25000, mealRate: 15000 },
+            "6013": { name: "Makassar",         bensinRate: 8000,  kendaraanRate: 25000, mealRate: 15000 },
+            "6016": { name: "Yogyakarta",       bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6017": { name: "Banjarmasin",      bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6019": { name: "Solo",             bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6023": { name: "Cikarang",         bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6027": { name: "Tasikmalaya",      bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6029": { name: "Batam",            bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6030": { name: "Pakansari",        bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6031": { name: "Lampung",          bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6036": { name: "Padalarang",       bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+            "6038": { name: "Tegal",            bensinRate: 20000, kendaraanRate: 25000, mealRate: 15000 },
+        };
+
+        const CANVASSER_DATA = {
+            "6001": ["Diazan Winayuda", "Reno Rahmadon", "Sukarna Fabian", "Yoga Pratama"],
+            "6003": ["Boby", "Dicky", "Harjuno", "Risky"],
+            "6004": ["Danan", "Ilham", "Nurdin", "Robani"],
+            "6006": ["Bimo Dwi Cahyo", "Faiyal Syaiful", "Mashuri", "Radittya Aribowo", "Rahjudin"],
+            "6011": ["Adrian Arya", "Afifudin", "Ahmad Badrudin", "Bekti Kesuma", "Dian Ekhananto", "Dimas Indra R"],
+            "6013": ["Bayu Aditya Putra", "Syukri", "Taufik Hidayat"],
+            "6016": ["Alfonsus Yudha P", "Edwin Febrianto", "Heppy Winartika Wati", "Hilman Basyirudin", "Lucas Mei Perdana", "M.Irfan Rasyid"],
+            "6017": ["Alfian", "Alfiannor", "Hendra Izza Razaki", "M.Yusuf", "Ozak", "Yusuf"],
+            "6019": ["Agung Kurniawan", "Bagus Wahyu", "Fajar Widiati", "Ilham Purnomo", "Rina", "Soleh"],
+            "6023": ["Abdilah Muamar Kadafi", "Asep Kuswendi", "Ryan Suryadi"],
+            "6027": ["Alif Maulana", "Dede Tendra L", "Dwi Irwansyah"],
+            "6029": ["Deni", "Richardo", "Zulfarian"],
+            "6030": ["Fabian", "Rendi"],
+            "6031": ["Ali Yusuf", "Heri Zakaria", "M.Wahyu", "Randi Anjasmara", "Slamet Widodo"],
+            "6036": ["Bimo Dwi Cahyo", "Faiyal Syaiful", "Fajar Ramadhan", "Heru Wicaksonno", "MF Fauzan", "Mashuri", "Radittya Aribowo", "Rahjudin"],
+            "6038": ["Amirsyah Zulfikar Fahri", "Puguh S.Permadi", "Wisnu Wicaksono"],
+        };
+
+        // =============================================
+        // INIT
+        // =============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            populateStoreDropdown();
+            document.getElementById('store').addEventListener('change', onStoreChange);
+            document.getElementById('hariKerja').addEventListener('input', calcAutoFields);
+            document.getElementById('canvasserForm').addEventListener('submit', submitData);
+            if (GAS_URL) loadData();
+        });
+
+        function populateStoreDropdown() {
+            const sel = document.getElementById('store');
+            const sorted = Object.keys(STORE_DATA).sort((a, b) => parseInt(a) - parseInt(b));
+            sel.innerHTML = '<option value="">-- Pilih Store --</option>';
+            sorted.forEach(code => {
+                const opt = document.createElement('option');
+                opt.value = code;
+                opt.textContent = `${code} - ${STORE_DATA[code].name}`;
+                sel.appendChild(opt);
+            });
+        }
+
+        function onStoreChange() {
+            const code = document.getElementById('store').value;
+            document.getElementById('storeName').value = code ? STORE_DATA[code].name : '';
+            const cSel = document.getElementById('canvasser');
+            cSel.innerHTML = code ? '<option value="">-- Pilih Canvasser --</option>' : '<option value="">-- Pilih Store dulu --</option>';
+
+            if (code && CANVASSER_DATA[code]) {
+                [...CANVASSER_DATA[code]].sort().forEach(name => {
+                    const opt = document.createElement('option');
+                    opt.value = name;
+                    opt.textContent = name;
+                    cSel.appendChild(opt);
+                });
+            }
+            calcAutoFields();
+        }
+
+        function calcAutoFields() {
+            const code = document.getElementById('store').value;
+            const hk = parseInt(document.getElementById('hariKerja').value) || 0;
+            if (!code || hk === 0) {
+                document.getElementById('bensinField').value = '';
+                document.getElementById('kendaraanField').value = '';
+                document.getElementById('mealField').value = '';
+                return;
+            }
+            const s = STORE_DATA[code];
+            document.getElementById('bensinField').value = formatRp(hk * s.bensinRate);
+            document.getElementById('kendaraanField').value = formatRp(hk * s.kendaraanRate);
+            document.getElementById('mealField').value = formatRp(hk * s.mealRate);
+        }
+
+        function formatRp(num) { return 'Rp ' + num.toLocaleString('id-ID'); }
+
+        function formatPeriode(startDate, endDate) {
+            const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+            const s = new Date(startDate), e = new Date(endDate);
+            return `${String(s.getDate()).padStart(2,'0')}-${String(e.getDate()).padStart(2,'0')} ${months[e.getMonth()]} ${e.getFullYear()}`;
+        }
+
+        // =============================================
+        // SUBMIT
+        // =============================================
+        async function submitData(e) {
+            e.preventDefault();
+            if (!GAS_URL) { showToast('URL Apps Script belum diatur! Klik Pengaturan.', 'error'); return; }
+
+            const storeCode = document.getElementById('store').value;
+            const storeName = document.getElementById('storeName').value;
+            const canvasser = document.getElementById('canvasser').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const hariKerja = parseInt(document.getElementById('hariKerja').value);
+
+            if (!storeCode || !canvasser || !startDate || !endDate || !hariKerja) {
+                showToast('Lengkapi semua field!', 'error'); return;
+            }
+
+            const store = STORE_DATA[storeCode];
+            const bensin = hariKerja * store.bensinRate;
+            const kendaraan = hariKerja * store.kendaraanRate;
+            const meal = hariKerja * store.mealRate;
+
+            const payload = {
+                action: 'insert',
+                tanggalUploud: new Date().toISOString(),
+                store: storeCode,
+                name: storeName,
+                namaCanvasser: canvasser,
+                periode: formatPeriode(startDate, endDate),
+                hariKerja: hariKerja,
+                bensin: bensin,
+                kendaraan: kendaraan,
+                meal: meal,
+                total: bensin + kendaraan + meal
+            };
+
+            const btn = document.getElementById('submitBtn');
+            const origHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div> Menyimpan...';
+
+            try {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = GAS_URL;
+                form.target = 'hiddenFrame';
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'data';
+                input.value = JSON.stringify(payload);
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
+
+                setTimeout(() => {
+                    showToast('Data berhasil dikirim!', 'success');
+                    resetForm();
+                    btn.disabled = false;
+                    btn.innerHTML = origHTML;
+                    setTimeout(() => loadData(), 500);
+                }, 1500);
+            } catch (error) {
+                showToast('Gagal menyimpan: ' + error.message, 'error');
+                btn.disabled = false;
+                btn.innerHTML = origHTML;
+            }
+        }
+
+        // =============================================
+        // LOAD DATA
+        // =============================================
+        async function loadData() {
+            if (!GAS_URL) { showToast('Set URL Apps Script di Pengaturan.', 'error'); return; }
+            const container = document.getElementById('tableContainer');
+            container.innerHTML = '<div class="empty-state"><div class="spinner" style="border-color:var(--gray-300);border-top-color:var(--primary);width:32px;height:32px;margin:0 auto 12px"></div><p>Memuat data...</p></div>';
+
+            try {
+                const resp = await fetch(GAS_URL + '?action=getData&t=' + Date.now());
+                const result = await resp.json();
+                if (result.status === 'success') {
+                    renderTable(result.data);
+                    document.getElementById('dataCount').textContent = result.data.length;
+                } else {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i><p>Error: ' + (result.message || 'Unknown') + '</p></div>';
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-wifi" style="color:var(--danger)"></i><p>Gagal memuat data. Periksa URL dan koneksi.</p></div>';
+            }
+        }
+
+        function renderTable(data) {
+            const container = document.getElementById('tableContainer');
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>Belum ada data.</p></div>';
+                return;
+            }
+
+            data.sort((a, b) => {
+                const sa = parseInt(a.store) || 0, sb = parseInt(b.store) || 0;
+                if (sa !== sb) return sa - sb;
+                return (a.namaCanvasser || '').localeCompare(b.namaCanvasser || '');
+            });
+
+            let totB = 0, totK = 0, totM = 0, totT = 0;
+            data.forEach(r => { totB += r.bensin||0; totK += r.kendaraan||0; totM += r.meal||0; totT += r.total||0; });
+
+            let html = '<div class="table-wrap"><table><thead><tr>' +
+                '<th>No</th><th>Tgl Upload</th><th>Store</th><th>Name</th>' +
+                '<th>Nama Canvasser</th><th>Periode</th><th>Hari Kerja</th>' +
+                '<th>Bensin</th><th>Kendaraan</th><th>Meal</th><th>Total</th><th></th>' +
+                '</tr></thead><tbody>';
+
+            html += '<tr class="total-row">' +
+                '<td colspan="7" style="text-align:center;font-size:13px">TOTAL</td>' +
+                '<td class="num">' + formatRp(totB) + '</td>' +
+                '<td class="num">' + formatRp(totK) + '</td>' +
+                '<td class="num">' + formatRp(totM) + '</td>' +
+                '<td class="num">' + formatRp(totT) + '</td><td></td></tr>';
+
+            data.forEach((r, i) => {
+                const tgl = r.tanggalUploud ? new Date(r.tanggalUploud).toLocaleDateString('id-ID') : '-';
+                const en = (r.namaCanvasser||'').replace(/'/g,"\\'");
+                const ep = (r.periode||'').replace(/'/g,"\\'");
+                html += '<tr>' +
+                    '<td>' + (i+1) + '</td>' +
+                    '<td>' + tgl + '</td>' +
+                    '<td>' + (r.store||'') + '</td>' +
+                    '<td>' + (r.name||'') + '</td>' +
+                    '<td><strong>' + (r.namaCanvasser||'') + '</strong></td>' +
+                    '<td>' + (r.periode||'') + '</td>' +
+                    '<td class="num">' + (r.hariKerja||0) + '</td>' +
+                    '<td class="num">' + formatRp(r.bensin||0) + '</td>' +
+                    '<td class="num">' + formatRp(r.kendaraan||0) + '</td>' +
+                    '<td class="num">' + formatRp(r.meal||0) + '</td>' +
+                    '<td class="num"><strong>' + formatRp(r.total||0) + '</strong></td>' +
+                    '<td><button class="delete-btn" title="Hapus" onclick="deleteRow(\'' + en + '\',\'' + ep + '\')"><i class="fas fa-trash-alt"></i></button></td>' +
+                    '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        // =============================================
+        // DELETE
+        // =============================================
+        async function deleteRow(namaCanvasser, periode) {
+            if (!confirm('Hapus data "' + namaCanvasser + '" periode "' + periode + '"?')) return;
+            if (!GAS_URL) return;
+            try {
+                const form = document.createElement('form');
+                form.method = 'POST'; form.action = GAS_URL; form.target = 'hiddenFrame';
+                const input = document.createElement('input');
+                input.type = 'hidden'; input.name = 'data';
+                input.value = JSON.stringify({ action: 'delete', namaCanvasser, periode });
+                form.appendChild(input);
+                document.body.appendChild(form); form.submit(); document.body.removeChild(form);
+                showToast('Data dihapus!', 'success');
+                setTimeout(() => loadData(), 1500);
+            } catch (err) { showToast('Gagal menghapus: ' + err.message, 'error'); }
+        }
+
+        // =============================================
+        // UTILS
+        // =============================================
+        function resetForm() {
+            document.getElementById('canvasserForm').reset();
+            document.getElementById('storeName').value = '';
+            document.getElementById('canvasser').innerHTML = '<option value="">-- Pilih Store dulu --</option>';
+            document.getElementById('bensinField').value = '';
+            document.getElementById('kendaraanField').value = '';
+            document.getElementById('mealField').value = '';
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.className = 'toast toast-' + type;
+            toast.querySelector('i').className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // =============================================
+        // SETTINGS
+        // =============================================
+        function openSettings() {
+            document.getElementById('gasUrlInput').value = GAS_URL || '';
+            document.getElementById('settingsModal').classList.add('show');
+        }
+        function closeSettings() { document.getElementById('settingsModal').classList.remove('show'); }
+        function saveSettings() {
+            const url = document.getElementById('gasUrlInput').value.trim();
+            if (url) {
+                localStorage.setItem('gas_url', url); GAS_URL = url;
+                closeSettings(); showToast('URL berhasil disimpan!', 'success'); loadData();
+            } else {
+                localStorage.removeItem('gas_url'); GAS_URL = ''; closeSettings();
+            }
+        }
+        document.getElementById('settingsModal').addEventListener('click', e => {
+            if (e.target === document.getElementById('settingsModal')) closeSettings();
+        });
+    </script>
+</body>
+</html>
